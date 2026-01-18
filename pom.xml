@@ -176,7 +176,7 @@
                 <jdk>[21,)</jdk>
             </activation>
             <properties>
-                <argLine.extras>-XX:+EnableDynamicAgentLoading</argLine.extras>
+                <argLine.extras>-XX:+EnableDynamicAgentLoading -Djdk.instrument.traceUsage --add-opens java.base/java.lang=ALL-UNNAMED</argLine.extras>
             </properties>
         </profile>
     </profiles>

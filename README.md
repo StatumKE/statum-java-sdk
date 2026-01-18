@@ -59,7 +59,12 @@ StatumClient client = new StatumClient(config);
 ApiResponse response = client.getAirtimeService()
     .sendAirtime("254712345678", "100");
 
-System.out.println("Success! Request ID: " + response.requestId());
+// Available fields
+int statusCode = response.statusCode();      // HTTP status code (200 = success)
+String description = response.description(); // Human-readable message
+String requestId = response.requestId();     // Unique transaction ID for tracking
+
+System.out.println("Success! Request ID: " + statusCode);
 ```
 
 ## API Usage
@@ -87,7 +92,11 @@ ApiResponse response = client.getSmsService()
         "Hello from Statum SDK!"  // Message
     );
 
-if (response.statusCode() == 200) {
+// Available fields
+int statusCode = response.statusCode();      // HTTP status code (200 = success)
+String description = response.description(); // Human-readable message
+String requestId = response.requestId();     // Unique transaction ID for tracking
+if (statusCode == 200) {
     System.out.println("SMS sent successfully!");
 }
 ```

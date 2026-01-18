@@ -50,4 +50,47 @@ class SmsServiceTest {
         assertEquals("STATUM", capturedRequest.get("sender_id"));
         assertEquals("Hello World", capturedRequest.get("message"));
     }
+
+    @Test
+    void sendSms_shouldThrowException_whenPhoneNumberIsNull() {
+        assertThrows(NullPointerException.class, () -> {
+            smsService.sendSms(null, "SENDER", "Message");
+        });
+    }
+
+    @Test
+    void sendSms_shouldThrowException_whenSenderIdIsNull() {
+        assertThrows(NullPointerException.class, () -> {
+            smsService.sendSms("254712345678", null, "Message");
+        });
+    }
+
+    @Test
+    void sendSms_shouldThrowException_whenMessageIsNull() {
+        assertThrows(NullPointerException.class, () -> {
+            smsService.sendSms("254712345678", "SENDER", null);
+        });
+    }
+
+    @Test
+    void sendSms_shouldThrowException_whenPhoneNumberIsInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            smsService.sendSms("123456", "SENDER", "Message");
+        });
+    }
+
+    @Test
+    void sendSms_shouldAcceptVariousPhoneFormats() {
+        ApiResponse mockResponse = new ApiResponse(200, "Submitted", "req-456");
+        when(httpClient.post(eq("/sms"), any(), eq(ApiResponse.class))).thenReturn(mockResponse);
+
+        // Test +254 format
+        assertDoesNotThrow(() -> smsService.sendSms("+254712345678", "SENDER", "Test"));
+
+        // Test 254 format
+        assertDoesNotThrow(() -> smsService.sendSms("254712345678", "SENDER", "Test"));
+
+        // Test 0 format
+        assertDoesNotThrow(() -> smsService.sendSms("0712345678", "SENDER", "Test"));
+    }
 }

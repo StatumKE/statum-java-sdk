@@ -1,6 +1,10 @@
 # Statum Java SDK
 
-The official Java SDK for the Statum API. This library provides a simple, thread-safe, and strictly typed interface for interacting with Statum services including Airtime, SMS, and Account Management.
+[![Java CI](https://github.com/StatumKE/statum-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/StatumKE/statum-java-sdk/actions/workflows/ci.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/co.ke.statum/statum-java-sdk.svg)](https://central.sonatype.com/artifact/co.ke.statum/statum-java-sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Official Java SDK for the [Statum API](https://statum.co.ke). Send airtime, SMS, and manage your account programmatically. typed interface for interacting with Statum services including Airtime, SMS, and Account Management.
 
 ## Features
 
@@ -191,6 +195,47 @@ The SDK handles HTTP status codes as follows:
 
 **Note**: For 200 status, the response object is returned. For errors (4xx/5xx), exceptions are thrown instead.
 
+## Input Validation
+
+The SDK performs client-side validation before making API calls:
+
+### Phone Number Format
+
+All phone numbers must be valid Kenyan numbers:
+
+```java
+// ✅ Valid formats
+"+254712345678"  // International format with +
+"254712345678"   // International format without +
+"0712345678"     // Local format
+"0112345678"     // Alternative prefix
+
+// ❌ Invalid formats
+"712345678"      // Missing prefix
+"123456"         // Too short
+"+254612345678"  // Invalid operator (must start with 7 or 1)
+```
+
+**Validation pattern**: `^(?:\+254|254|0)(7|1)[0-9]{8}$`
+
+### Airtime Amount
+
+Airtime amounts must be between **KES 5** and **KES 10,000**:
+
+```java
+// ✅ Valid amounts
+airtimeService.sendAirtime("254712345678", "5");      // Minimum
+airtimeService.sendAirtime("254712345678", "100");    // Normal
+airtimeService.sendAirtime("254712345678", "10000");  // Maximum
+
+// ❌ Invalid amounts
+airtimeService.sendAirtime("254712345678", "4");      // Too low
+airtimeService.sendAirtime("254712345678", "10001");  // Too high
+airtimeService.sendAirtime("254712345678", "abc");    // Not numeric
+```
+
+**Validation throws `IllegalArgumentException`** with descriptive error messages.
+
 ## Error Handling
 
 ### Exception Hierarchy
@@ -349,7 +394,7 @@ See the [examples](examples/) directory for complete working examples including 
 - 📖 **API Documentation**: [https://docs.statum.co.ke](https://docs.statum.co.ke)
 - 🔑 **API Dashboard**: [https://app.statum.co.ke/user](https://app.statum.co.ke/user) - Manage API keys and view usage
 - 📧 **Email Support**: support@statum.co.ke
-- 🐛 **Report Issues**: [GitHub Issues](https://github.com/statum-global/statum-java-sdk/issues)
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/StatumKE/statum-java-sdk/issues)
 
 ## License
 

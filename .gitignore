@@ -25,6 +25,11 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+# Maven Central Deployment
+.gpg/
+*.asc
+*.gpg
+
 # IDE
 .idea/
 *.iml
@@ -34,11 +39,34 @@ buildNumber.properties
 .settings/
 .project
 .classpath
+.factorypath
+*.launch
 
 # Mac
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
 
 # Other
 *.swp
 *.bak
-*~
+*.tmp
+*.temp
+.history/
+
+# Environment files (secrets should never be committed)
+.env
+.env.local
+*.pem
+*.key
+credentials.xml
+settings.xml

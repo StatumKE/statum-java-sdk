@@ -48,7 +48,7 @@ public class HttpClientProvider {
         try {
             String jsonBody = objectMapper.writeValueAsString(requestBody);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(config.getBaseUrl() + endpoint))
+                    .uri(URI.create(buildUrl(endpoint)))
                     .header("Authorization", authHeader)
                     .header("Content-Type", "application/json")
                     .header("Accept", "application/json")
@@ -63,13 +63,37 @@ public class HttpClientProvider {
 
     public <T> T get(String endpoint, Class<T> responseType) {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(config.getBaseUrl() + endpoint))
+                .uri(URI.create(buildUrl(endpoint)))
                 .header("Authorization", authHeader)
                 .header("Accept", "application/json")
                 .GET()
                 .build();
 
         return sendRequest(request, responseType);
+    }
+
+    /**
+     * Safely builds a complete URL by joining base URL and endpoint.
+     * Handles trailing slashes in base URL and leading slashes in endpoint.
+     *
+     * @param endpoint the API endpoint (e.g., "/airtime" or "airtime")
+     * @return complete URL
+     */
+    private String buildUrl(String endpoint) {
+        String base = config.getBaseUrl();
+        String path = endpoint;
+
+        // Remove trailing slash from base URL
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+
+        // Ensure endpoint starts with slash
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+
+        return base + path;
     }
 
     private <T> T sendRequest(HttpRequest request, Class<T> responseType) {

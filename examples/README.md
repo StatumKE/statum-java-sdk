@@ -134,4 +134,4 @@ public class StatumClientFactory {
 - 📖 [API Documentation](https://docs.statum.co.ke)
 - 🔑 [API Dashboard](https://app.statum.co.ke/user)
 - 📧 support@statum.co.ke
-- 🐛 [Report Issues](https://github.com/statum-global/statum-java-sdk/issues)
+- 🐛 [Report Issues](https://github.com/StatumKE/statum-java-sdk/issues)

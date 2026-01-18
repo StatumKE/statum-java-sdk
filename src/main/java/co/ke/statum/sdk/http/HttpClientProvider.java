@@ -101,7 +101,9 @@ public class HttpClientProvider {
                 // {"field": ["msg"]}}
                 // For now keeping it simple or parsing as generic Map if structure is known
                 // If the API returns a map of field -> list of errors directly:
-                errors = objectMapper.readValue(body, Map.class);
+                @SuppressWarnings("unchecked")
+                Map<String, List<String>> parsedErrors = objectMapper.readValue(body, Map.class);
+                errors = parsedErrors;
             } catch (Exception ignored) {
             }
             throw new ValidationException("Validation failed", body, errors);

@@ -42,7 +42,8 @@ class AirtimeServiceTest {
         assertEquals("Success", response.description());
         assertEquals("req-123", response.requestId());
 
-        ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<Map<String, String>> captor = ArgumentCaptor.forClass(Map.class);
         verify(httpClient).post(eq("/airtime"), captor.capture(), eq(ApiResponse.class));
 
         Map<String, String> capturedRequest = captor.getValue();

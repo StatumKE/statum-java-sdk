@@ -1,7 +1,22 @@
 # Statum Java SDK
 
+The official Java SDK for the Statum API. This library provides a simple, thread-safe, and strictly typed interface for interacting with Statum services including Airtime, SMS, and Account Management.
 
-The official Java SDK for the Statum API. This library provides a simple, thread-safe, and strictly typed interface for interacting with Statum services like Airtime, SMS, and Account Details.
+## Features
+
+✅ **Java 17+** - Modern Java with Records and sealed types  
+✅ **Zero Dependencies** - Uses only `java.net.http` (no OkHttp, Retrofit, etc.)  
+✅ **Thread-Safe** - Reuse `StatumClient` across your entire application  
+✅ **Immutable DTOs** - All data models are immutable Java records  
+✅ **Type-Safe** - Compile-time type checking for all API calls  
+✅ **Framework-Agnostic** - Works with Spring, Quarkus, Micronaut, Jakarta EE, or plain Java
+
+## Getting Started
+
+1. **Sign up for a Statum account**: [https://app.statum.co.ke](https://app.statum.co.ke)
+2. **Get your API credentials** from the [Statum Dashboard](https://app.statum.co.ke/user)
+3. **Read the full API documentation**: [https://docs.statum.co.ke](https://docs.statum.co.ke)
+4. **Install the SDK** (see Installation below)
 
 ## Requirements
 
@@ -25,84 +40,318 @@ The official Java SDK for the Statum API. This library provides a simple, thread
 implementation 'co.ke.statum:statum-java-sdk:1.0.0'
 ```
 
-## Usage
-
-### Initialization
-
-Create a `StatumConfig` and `StatumClient`. The client is thread-safe and should be reused across your application.
+## Quick Start
 
 ```java
 import co.ke.statum.sdk.StatumClient;
 import co.ke.statum.sdk.config.StatumConfig;
+import co.ke.statum.sdk.model.ApiResponse;
 
+// Get your credentials from: https://app.statum.co.ke/user
 StatumConfig config = new StatumConfig("YOUR_CONSUMER_KEY", "YOUR_CONSUMER_SECRET");
 StatumClient client = new StatumClient(config);
+
+// Send airtime
+ApiResponse response = client.getAirtimeService()
+    .sendAirtime("254712345678", "100");
+
+System.out.println("Success! Request ID: " + response.requestId());
 ```
 
-### Airtime API
+## API Usage
+
+### Send Airtime
 
 ```java
 import co.ke.statum.sdk.model.ApiResponse;
 
-try {
-    ApiResponse response = client.getAirtimeService().sendAirtime("254712345678", "100");
-    System.out.println("Status: " + response.statusCode());
-    System.out.println("Description: " + response.description());
-} catch (ApiException e) {
-    System.err.println("Error: " + e.getMessage());
-}
+ApiResponse response = client.getAirtimeService()
+    .sendAirtime("254712345678", "100");
+
+System.out.println("Status Code: " + response.statusCode());
+System.out.println("Description: " + response.description());
+System.out.println("Request ID: " + response.requestId());
 ```
 
-### SMS API
+### Send SMS
 
 ```java
-import co.ke.statum.sdk.model.ApiResponse;
+ApiResponse response = client.getSmsService()
+    .sendSms(
+        "254712345678",           // Phone number
+        "STATUM",                 // Sender ID
+        "Hello from Statum SDK!"  // Message
+    );
 
-try {
-    ApiResponse response = client.getSmsService().sendSms("254712345678", "STATUM", "Hello from Java SDK!");
-    System.out.println("Status: " + response.statusCode());
-} catch (ApiException e) {
-    System.err.println("Error: " + e.getMessage());
+if (response.statusCode() == 200) {
+    System.out.println("SMS sent successfully!");
 }
 ```
 
-### Account Details API
+### Get Account Details
 
 ```java
 import co.ke.statum.sdk.model.AccountDetailsResponse;
 
-try {
-    AccountDetailsResponse response = client.getAccountService().getAccountDetails();
-    System.out.println("Balance: " + response.organization().details().availableBalance());
-} catch (ApiException e) {
-    System.err.println("Error: " + e.getMessage());
+AccountDetailsResponse account = client.getAccountService()
+    .getAccountDetails();
+
+System.out.println("Organization: " + account.organization().name());
+System.out.println("Balance: " + account.organization().details().availableBalance());
+System.out.println("Location: " + account.organization().details().location());
+
+// Access service accounts
+account.organization().accounts().forEach(serviceAccount -> {
+    System.out.println(serviceAccount.serviceName() + ": " + serviceAccount.account());
+});
+```
+
+## Understanding API Responses
+
+All API responses are immutable Java records with typed fields. Here's what you get back:
+
+### ApiResponse (Airtime & SMS)
+
+```java
+ApiResponse response = client.getAirtimeService().sendAirtime("254712345678", "100");
+
+// Available fields
+int statusCode = response.statusCode();      // HTTP status code (200 = success)
+String description = response.description(); // Human-readable message
+String requestId = response.requestId();     // Unique transaction ID for tracking
+
+// Example: Check if successful
+if (response.statusCode() == 200) {
+    // Transaction successful
+    System.out.println("Transaction ID: " + response.requestId());
+} else {
+    // Transaction failed (but no exception thrown)
+    System.err.println("Failed: " + response.description());
 }
 ```
+
+### AccountDetailsResponse
+
+```java
+AccountDetailsResponse account = client.getAccountService().getAccountDetails();
+
+// Response structure
+record AccountDetailsResponse(
+    int statusCode,
+    String description,
+    String requestId,
+    Organization organization
+)
+
+// Organization details
+record Organization(
+    String name,
+    OrganizationDetails details,
+    List<ServiceAccount> accounts
+)
+
+// Organization financial and contact details
+record OrganizationDetails(
+    double availableBalance,        // Current account balance
+    String location,                // Physical location
+    String website,                 // Company website
+    String officeEmail,            // Contact email
+    String officeMobile,           // Contact phone
+    String mpesaAccountTopUpCode   // M-Pesa paybill/till
+)
+
+// Service account mapping
+record ServiceAccount(
+    String account,      // Account identifier
+    String serviceName   // Service type (e.g., "AIRTIME", "SMS")
+)
+
+// Real-world usage
+System.out.println("Balance: KES " + account.organization().details().availableBalance());
+System.out.println("Top-up code: " + account.organization().details().mpesaAccountTopUpCode());
+
+// List all service accounts
+account.organization().accounts().forEach(sa -> 
+    System.out.println(sa.serviceName() + " → " + sa.account())
+);
+```
+
+### Response Status Codes
+
+The SDK handles HTTP status codes as follows:
+
+| Status Code | Meaning | SDK Behavior |
+|------------|---------|--------------|
+| 200 | Success | Returns response object normally |
+| 401 | Authentication failed | Throws `AuthenticationException` |
+| 403 | Access denied | Throws `AuthorizationException` |
+| 422 | Validation failed | Throws `ValidationException` with field errors |
+| 500+ | Server error | Throws `ApiException` |
+| Network errors | Connection/timeout | Throws `NetworkException` |
+
+**Note**: For 200 status, the response object is returned. For errors (4xx/5xx), exceptions are thrown instead.
 
 ## Error Handling
 
-All methods throw subclasses of `ApiException`:
+### Exception Hierarchy
 
-- `AuthenticationException` (401): Invalid credentials.
-- `AuthorizationException` (403): Access denied.
-- `ValidationException` (422): Invalid input. Contains a map of validation errors.
-- `NetworkException`: Network or timeout errors.
-- `ApiException`: Generic API error (other 4xx/5xx status codes).
+```
+ApiException (base)
+├── AuthenticationException (HTTP 401)
+├── AuthorizationException (HTTP 403)
+├── ValidationException (HTTP 422)
+└── NetworkException (Network/timeout errors)
+```
+
+### Handling Errors
 
 ```java
+import co.ke.statum.sdk.exceptions.*;
+
 try {
-    client.getAirtimeService().sendAirtime("invalid", "100");
-} catch (ValidationException e) {
-    System.err.println("Validation errors: " + e.getValidationErrors());
+    ApiResponse response = client.getAirtimeService()
+        .sendAirtime("254712345678", "100");
+    
+    System.out.println("Success: " + response.description());
+    
 } catch (AuthenticationException e) {
-    System.err.println("Check your credentials!");
+    System.err.println("Authentication failed. Check your credentials at: https://app.statum.co.ke/user");
+    
+} catch (ValidationException e) {
+    System.err.println("Validation failed:");
+    e.getValidationErrors().forEach((field, errors) -> {
+        System.err.println("  " + field + ": " + String.join(", ", errors));
+    });
+    
+} catch (NetworkException e) {
+    System.err.println("Network error: " + e.getMessage());
+    // Implement retry logic
+    
+} catch (ApiException e) {
+    System.err.println("API error: " + e.getMessage());
 }
 ```
 
-## Contributing
+## Configuration
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+### Basic Configuration
+
+```java
+StatumConfig config = new StatumConfig("consumerKey", "consumerSecret");
+StatumClient client = new StatumClient(config);
+```
+
+> **Get your credentials** from the [Statum Dashboard](https://app.statum.co.ke/user)
+
+### Advanced: Custom Timeout
+
+```java
+import java.time.Duration;
+
+StatumConfig config = new StatumConfig(
+    "consumerKey", 
+    "consumerSecret",
+    "https://api.statum.co.ke/api/v2",
+    Duration.ofSeconds(60)  // Custom timeout
+);
+```
+
+### Spring Boot Integration
+
+```java
+@Configuration
+public class StatumConfig {
+    @Bean
+    public StatumClient statumClient(
+        @Value("${statum.consumer-key}") String key,
+        @Value("${statum.consumer-secret}") String secret
+    ) {
+        return new StatumClient(new StatumConfig(key, secret));
+    }
+}
+```
+
+## Best Practices
+
+### 1. Reuse the Client Instance
+
+`StatumClient` is thread-safe. Create once, reuse everywhere:
+
+```java
+// ✅ GOOD
+public class App {
+    private static final StatumClient CLIENT = new StatumClient(
+        new StatumConfig(System.getenv("STATUM_KEY"), System.getenv("STATUM_SECRET"))
+    );
+}
+
+// ❌ BAD - Creates new HttpClient every time
+public void sendSms() {
+    StatumClient client = new StatumClient(config);
+    client.getSmsService().sendSms(...);
+}
+```
+
+### 2. Store Credentials Securely
+
+```java
+// ✅ GOOD - Use environment variables
+StatumConfig config = new StatumConfig(
+    System.getenv("STATUM_CONSUMER_KEY"),
+    System.getenv("STATUM_CONSUMER_SECRET")
+);
+
+// ❌ BAD - Hardcoded
+StatumConfig config = new StatumConfig("key123", "secret456");
+```
+
+### 3. Handle Network Errors with Retry Logic
+
+```java
+public ApiResponse sendWithRetry(String phone, String amount, int maxRetries) {
+    int attempt = 0;
+    while (attempt < maxRetries) {
+        try {
+            return client.getAirtimeService().sendAirtime(phone, amount);
+        } catch (NetworkException e) {
+            attempt++;
+            if (attempt >= maxRetries) throw e;
+            Thread.sleep((long) Math.pow(2, attempt) * 1000); // Exponential backoff
+        }
+    }
+    throw new RuntimeException("Max retries exceeded");
+}
+```
+
+### 4. Track Requests with Request IDs
+
+```java
+ApiResponse response = client.getAirtimeService().sendAirtime("254712345678", "100");
+logger.info("Airtime sent. RequestID: {}", response.requestId());
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| **Authentication failed (401)** | Get credentials from [Dashboard](https://app.statum.co.ke/user). Verify no typos or swapped key/secret. |
+| **Network timeout** | Increase timeout: `Duration.ofSeconds(60)` |
+| **Validation failed (422)** | Check phone format (`254712345678`) and amount is positive |
+| **ClassNotFoundException** | Ensure `jackson-databind` is on classpath |
+
+## Examples
+
+See the [examples](examples/) directory for complete working examples including Spring Boot integration and advanced error handling.
+
+## Resources
+
+- 🌐 **Statum Website**: [https://statum.co.ke](https://statum.co.ke)
+- 📖 **API Documentation**: [https://docs.statum.co.ke](https://docs.statum.co.ke)
+- 🔑 **API Dashboard**: [https://app.statum.co.ke/user](https://app.statum.co.ke/user) - Manage API keys and view usage
+- 📧 **Email Support**: support@statum.co.ke
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/statum-global/statum-java-sdk/issues)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+

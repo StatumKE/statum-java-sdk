@@ -41,7 +41,8 @@ class SmsServiceTest {
         assertEquals(200, response.statusCode());
         assertEquals("Submitted", response.description());
 
-        ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<Map<String, String>> captor = ArgumentCaptor.forClass(Map.class);
         verify(httpClient).post(eq("/sms"), captor.capture(), eq(ApiResponse.class));
 
         Map<String, String> capturedRequest = captor.getValue();

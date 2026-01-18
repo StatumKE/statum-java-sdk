@@ -50,8 +50,8 @@ class UrlBuilderTest {
      * Helper method that mirrors the private buildUrl in HttpClientProvider
      */
     private String buildUrl(String base, String endpoint) {
-        // Remove trailing slash from base URL
-        if (base.endsWith("/")) {
+        // Remove all trailing slashes from base URL
+        while (base.endsWith("/")) {
             base = base.substring(0, base.length() - 1);
         }
 

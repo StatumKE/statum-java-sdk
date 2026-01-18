@@ -83,8 +83,8 @@ public class HttpClientProvider {
         String base = config.getBaseUrl();
         String path = endpoint;
 
-        // Remove trailing slash from base URL
-        if (base.endsWith("/")) {
+        // Remove all trailing slashes from base URL
+        while (base.endsWith("/")) {
             base = base.substring(0, base.length() - 1);
         }
 

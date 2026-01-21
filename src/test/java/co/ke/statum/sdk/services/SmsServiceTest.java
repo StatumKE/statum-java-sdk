@@ -80,6 +80,20 @@ class SmsServiceTest {
     }
 
     @Test
+    void sendSms_shouldThrowException_whenMessageIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            smsService.sendSms("254712345678", "SENDER", "");
+        });
+    }
+
+    @Test
+    void sendSms_shouldThrowException_whenMessageIsBlank() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            smsService.sendSms("254712345678", "SENDER", "   ");
+        });
+    }
+
+    @Test
     void sendSms_shouldAcceptVariousPhoneFormats() {
         ApiResponse mockResponse = new ApiResponse(200, "Submitted", "req-456");
         when(httpClient.post(eq("/sms"), any(), eq(ApiResponse.class))).thenReturn(mockResponse);

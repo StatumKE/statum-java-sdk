@@ -26,6 +26,11 @@ public class SmsService {
         // Validate phone number format
         validatePhoneNumber(phoneNumber);
 
+        // Validate message is not empty or blank
+        if (message.isBlank()) {
+            throw new IllegalArgumentException("Message cannot be empty or blank");
+        }
+
         Map<String, String> request = new HashMap<>();
         request.put("phone_number", phoneNumber);
         request.put("sender_id", senderId);

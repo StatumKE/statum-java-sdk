@@ -9,7 +9,7 @@
     <!-- Coordinates -->
     <groupId>ke.co.statum</groupId>
     <artifactId>statum-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <!-- Project Metadata -->

@@ -50,9 +50,7 @@ class HttpClientProviderBugFixTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(422);
         when(mockResponse.body()).thenReturn(json);
-        @SuppressWarnings("unchecked")
-        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
-        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
                 .thenReturn(mockResponse);
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
@@ -85,9 +83,7 @@ class HttpClientProviderBugFixTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(422);
         when(mockResponse.body()).thenReturn(json);
-        @SuppressWarnings("unchecked")
-        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
-        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
                 .thenReturn(mockResponse);
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {

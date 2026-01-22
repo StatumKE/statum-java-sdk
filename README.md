@@ -34,14 +34,14 @@ Official Java SDK for the [Statum API](https://statum.co.ke). Send airtime, SMS,
 <dependency>
     <groupId>ke.co.statum</groupId>
     <artifactId>statum-java-sdk</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'ke.co.statum:statum-java-sdk:1.0.2'
+implementation 'ke.co.statum:statum-java-sdk:1.0.3'
 ```
 
 ## Quick Start

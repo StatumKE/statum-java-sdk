@@ -1,7 +1,7 @@
 # Statum Java SDK
 
 [![Java CI](https://github.com/StatumKE/statum-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/StatumKE/statum-java-sdk/actions/workflows/ci.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/co.ke.statum/statum-java-sdk.svg)](https://central.sonatype.com/artifact/co.ke.statum/statum-java-sdk)
+[![Maven Central](https://img.shields.io/maven-central/v/ke.co.statum/statum-java-sdk.svg)](https://central.sonatype.com/artifact/ke.co.statum/statum-java-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official Java SDK for the [Statum API](https://statum.co.ke). Send airtime, SMS, and manage your account programmatically. typed interface for interacting with Statum services including Airtime, SMS, and Account Management.

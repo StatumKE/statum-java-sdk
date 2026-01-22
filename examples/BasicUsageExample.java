@@ -1,10 +1,10 @@
 package examples;
 
-import co.ke.statum.sdk.StatumClient;
-import co.ke.statum.sdk.config.StatumConfig;
-import co.ke.statum.sdk.exceptions.ApiException;
-import co.ke.statum.sdk.model.AccountDetailsResponse;
-import co.ke.statum.sdk.model.ApiResponse;
+import ke.co.statum.sdk.StatumClient;
+import ke.co.statum.sdk.config.StatumConfig;
+import ke.co.statum.sdk.exceptions.ApiException;
+import ke.co.statum.sdk.model.AccountDetailsResponse;
+import ke.co.statum.sdk.model.ApiResponse;
 
 /**
  * Basic usage examples for the Statum Java SDK.

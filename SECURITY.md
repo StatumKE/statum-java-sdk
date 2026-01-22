@@ -12,6 +12,6 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this project, please send an e-mail to security@statum.co.ke. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this project, please send an e-mail to support@statum.co.ke. All security vulnerabilities will be promptly addressed.
 
 Please do NOT create a public GitHub issue for security vulnerabilities.

@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Coordinates -->
-    <groupId>co.ke.statum</groupId>
+    <groupId>ke.co.statum</groupId>
     <artifactId>statum-java-sdk</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>

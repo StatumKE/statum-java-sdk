@@ -1,9 +1,9 @@
 package examples;
 
-import co.ke.statum.sdk.StatumClient;
-import co.ke.statum.sdk.config.StatumConfig;
-import co.ke.statum.sdk.exceptions.*;
-import co.ke.statum.sdk.model.ApiResponse;
+import ke.co.statum.sdk.StatumClient;
+import ke.co.statum.sdk.config.StatumConfig;
+import ke.co.statum.sdk.exceptions.*;
+import ke.co.statum.sdk.model.ApiResponse;
 
 import java.util.List;
 import java.util.Map;

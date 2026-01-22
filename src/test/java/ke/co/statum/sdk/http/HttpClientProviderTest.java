@@ -37,7 +37,9 @@ class HttpClientProviderTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(401);
         when(mockResponse.body()).thenReturn("{\"error\":\"Unauthorized\"}");
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         Map<String, String> requestBody = new HashMap<>();
@@ -57,7 +59,9 @@ class HttpClientProviderTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(403);
         when(mockResponse.body()).thenReturn("{\"error\":\"Forbidden\"}");
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         Map<String, String> requestBody = new HashMap<>();
@@ -75,7 +79,9 @@ class HttpClientProviderTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(422);
         when(mockResponse.body()).thenReturn("{\"phone_number\":[\"Invalid format\"]}");
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         Map<String, String> requestBody = new HashMap<>();
@@ -94,7 +100,9 @@ class HttpClientProviderTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(500);
         when(mockResponse.body()).thenReturn("{\"error\":\"Internal Server Error\"}");
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         Map<String, String> requestBody = new HashMap<>();
@@ -143,7 +151,9 @@ class HttpClientProviderTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(401);
         when(mockResponse.body()).thenReturn("{\"error\":\"Unauthorized\"}");
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         AuthenticationException exception = assertThrows(AuthenticationException.class, () -> {

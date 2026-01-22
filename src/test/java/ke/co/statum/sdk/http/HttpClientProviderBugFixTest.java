@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +50,9 @@ class HttpClientProviderBugFixTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(422);
         when(mockResponse.body()).thenReturn(json);
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {
@@ -84,7 +85,9 @@ class HttpClientProviderBugFixTest {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(422);
         when(mockResponse.body()).thenReturn(json);
-        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        @SuppressWarnings("unchecked")
+        HttpResponse.BodyHandler<String> bodyHandler = any(HttpResponse.BodyHandler.class);
+        when(mockHttpClient.send(any(HttpRequest.class), bodyHandler))
                 .thenReturn(mockResponse);
 
         ValidationException exception = assertThrows(ValidationException.class, () -> {

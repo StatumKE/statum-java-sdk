@@ -32,7 +32,7 @@ Official Java SDK for the [Statum API](https://statum.co.ke). Send airtime, SMS,
 
 ```xml
 <dependency>
-    <groupId>co.ke.statum</groupId>
+    <groupId>ke.co.statum</groupId>
     <artifactId>statum-java-sdk</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -41,15 +41,15 @@ Official Java SDK for the [Statum API](https://statum.co.ke). Send airtime, SMS,
 ### Gradle
 
 ```groovy
-implementation 'co.ke.statum:statum-java-sdk:1.0.0'
+implementation 'ke.co.statum:statum-java-sdk:1.0.0'
 ```
 
 ## Quick Start
 
 ```java
-import co.ke.statum.sdk.StatumClient;
-import co.ke.statum.sdk.config.StatumConfig;
-import co.ke.statum.sdk.model.ApiResponse;
+import ke.co.statum.sdk.StatumClient;
+import ke.co.statum.sdk.config.StatumConfig;
+import ke.co.statum.sdk.model.ApiResponse;
 
 // Get your credentials from: https://app.statum.co.ke/user
 StatumConfig config = new StatumConfig("YOUR_CONSUMER_KEY", "YOUR_CONSUMER_SECRET");
@@ -72,7 +72,7 @@ System.out.println("Success! Request ID: " + statusCode);
 ### Send Airtime
 
 ```java
-import co.ke.statum.sdk.model.ApiResponse;
+import ke.co.statum.sdk.model.ApiResponse;
 
 ApiResponse response = client.getAirtimeService()
     .sendAirtime("254712345678", "100");
@@ -104,7 +104,7 @@ if (statusCode == 200) {
 ### Get Account Details
 
 ```java
-import co.ke.statum.sdk.model.AccountDetailsResponse;
+import ke.co.statum.sdk.model.AccountDetailsResponse;
 
 AccountDetailsResponse account = client.getAccountService()
     .getAccountDetails();
@@ -260,7 +260,7 @@ ApiException (base)
 ### Handling Errors
 
 ```java
-import co.ke.statum.sdk.exceptions.*;
+import ke.co.statum.sdk.exceptions.*;
 
 try {
     ApiResponse response = client.getAirtimeService()

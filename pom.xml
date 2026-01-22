@@ -9,7 +9,7 @@
     <!-- Coordinates -->
     <groupId>ke.co.statum</groupId>
     <artifactId>statum-java-sdk</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <!-- Project Metadata -->
@@ -50,7 +50,7 @@
         <connection>scm:git:https://github.com/StatumKE/statum-java-sdk.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:StatumKE/statum-java-sdk.git</developerConnection>
         <url>https://github.com/StatumKE/statum-java-sdk</url>
-        <tag>v1.0.1</tag>
+        <tag>v1.0.2</tag>
     </scm>
 
     <!-- Properties -->

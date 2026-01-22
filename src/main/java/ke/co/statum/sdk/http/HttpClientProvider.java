@@ -118,16 +118,33 @@ public class HttpClientProvider {
         } else if (status == 403) {
             throw new AuthorizationException("Access denied", body);
         } else if (status == 422) {
-            // Try to parse validation errors if possible, otherwise generic map
             Map<String, List<String>> errors = null;
             try {
-                // Assuming validation errors come in a specific format like {"errors":
-                // {"field": ["msg"]}}
-                // For now keeping it simple or parsing as generic Map if structure is known
-                // If the API returns a map of field -> list of errors directly:
+                Map<String, Object> map = objectMapper.readValue(body,
+                        new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {
+                        });
+                Object ve = map.get("validation_errors");
+
+                // If validation_errors key exists, use it. Otherwise, assume errors are at root
+                // but filter out non-list properties like status_code and description.
                 @SuppressWarnings("unchecked")
-                Map<String, List<String>> parsedErrors = objectMapper.readValue(body, Map.class);
-                errors = parsedErrors;
+                Map<String, Object> sourceMap = (ve instanceof Map) ? (Map<String, Object>) ve : map;
+
+                Map<String, List<String>> parsedErrors = new java.util.HashMap<>();
+                sourceMap.forEach((k, v) -> {
+                    if (v instanceof List) {
+                        @SuppressWarnings("unchecked")
+                        List<Object> list = (List<Object>) v;
+                        List<String> stringList = list.stream()
+                                .map(String::valueOf)
+                                .toList();
+                        parsedErrors.put(k, stringList);
+                    }
+                });
+
+                if (!parsedErrors.isEmpty()) {
+                    errors = parsedErrors;
+                }
             } catch (Exception ignored) {
             }
             throw new ValidationException("Validation failed", body, errors);

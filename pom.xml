@@ -62,7 +62,6 @@
         <junit.version>5.10.0</junit.version>
         <mockito.version>5.15.2</mockito.version>
 
-        <argLine.extras></argLine.extras>
     </properties>
 
     <!-- Dependencies -->
